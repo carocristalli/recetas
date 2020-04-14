@@ -11,4 +11,7 @@ interface RecipeApi {
     fun searchRecipeAsync(
         @Query("s") query: String
     ): Deferred<RecipeResponse>
+
+    @GET("/api/json/v1/1/random.php")
+    fun searchRandomMealAsync(): Deferred<RecipeResponse>
 }

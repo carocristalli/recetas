@@ -16,6 +16,7 @@ class RecipesViewModel(private val recipeRepository: RecipesRepository) : ViewMo
     val showLoading = MutableLiveData<Boolean>()
     val showError = MutableLiveData<String>()
     val mealList = MutableLiveData<List<Meal>>()
+    val banner = MutableLiveData<String>()
 
     fun loadRecipes() {
         showLoading.value = true
@@ -32,5 +33,17 @@ class RecipesViewModel(private val recipeRepository: RecipesRepository) : ViewMo
 
     fun searchMeal(query: String) {
         queryLiveData.postValue(query)
+    }
+
+    fun loadRandomMeal() {
+        viewModelScope.launch {
+            val result =
+                withContext(Dispatchers.IO) { recipeRepository.getRandomMeal() }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> banner.value = result.data.strMealThumb
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
     }
 }
