@@ -1,4 +1,4 @@
-package com.uala.recetas.presentation
+package com.uala.recetas.presentation.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

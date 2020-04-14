@@ -1,4 +1,4 @@
-package com.uala.recetas.presentation
+package com.uala.recetas.presentation.list
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +11,22 @@ import com.uala.recetas.domain.Meal
 import kotlinx.android.synthetic.main.recipe_view_item.view.*
 import kotlin.properties.Delegates
 
-class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
+class RecipesAdapter(private val mealClickListener: OnMealClickListener) : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
 
-    private var meals: List<Meal> by Delegates.observable(emptyList()) { _, _, _ ->
+    var meals: List<Meal> by Delegates.observable(emptyList()) { _, _, _ ->
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recipe_view_item, parent, false)
-        return RecipeViewHolder(view)
+        val holder = RecipeViewHolder(view)
+        holder.itemView.container.setOnClickListener {
+            if (holder.adapterPosition != RecyclerView.NO_POSITION) {
+                mealClickListener.onMealClickListener(holder.adapterPosition)
+            }
+        }
+        return holder
     }
 
     override fun getItemCount(): Int = meals.size
@@ -49,6 +55,10 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
             itemView.strMeal.text = meal.strMeal
             itemView.strCategory.text = meal.strCategory
         }
+    }
+
+    interface OnMealClickListener{
+        fun onMealClickListener(position: Int)
     }
 
 }

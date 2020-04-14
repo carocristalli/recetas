@@ -1,5 +1,6 @@
-package com.uala.recetas.presentation
+package com.uala.recetas.presentation.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,8 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.uala.recetas.R
 import com.uala.recetas.domain.Meal
+import com.uala.recetas.presentation.detail.MealDetailActivity
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -20,11 +23,13 @@ import kotlinx.android.synthetic.main.recipes_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(),
+    RecipesAdapter.OnMealClickListener {
+
+    private val MEAL = "meal"
 
     private val viewModel: RecipesViewModel by viewModel()
-    private var adapter = RecipesAdapter()
-
+    private var adapter = RecipesAdapter(this)
     private lateinit var disposable: Disposable
 
     override fun onCreateView(
@@ -114,5 +119,12 @@ class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
+    }
+
+
+    override fun onMealClickListener(position: Int) {
+        val intent = Intent(context!!, MealDetailActivity::class.java)
+        intent.putExtra(MEAL, Gson().toJson(adapter.meals[position]))
+        startActivity(intent)
     }
 }

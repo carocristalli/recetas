@@ -5,7 +5,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.uala.recetas.data.repository.RecipeRepositoryImpl
 import com.uala.recetas.data.repository.RecipesRepository
 import com.uala.recetas.data.service.RecipeApi
-import com.uala.recetas.presentation.RecipesViewModel
+import com.uala.recetas.presentation.list.RecipesViewModel
 import okhttp3.OkHttpClient
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -26,7 +26,11 @@ val appModules = module {
         )
     }
     factory<RecipesRepository> { RecipeRepositoryImpl(recipeApi = get()) }
-    viewModel { RecipesViewModel(recipeRepository = get()) }
+    viewModel {
+        RecipesViewModel(
+            recipeRepository = get()
+        )
+    }
 }
 
 fun createHttpClient(): OkHttpClient {
