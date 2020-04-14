@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.recipes_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
-class MainFragment : Fragment(),
+class RecipesFragment : Fragment(),
     RecipesAdapter.OnMealClickListener {
 
     private val MEAL = "meal"
@@ -144,7 +144,7 @@ class MainFragment : Fragment(),
                 queryEditText.removeTextChangedListener(textWatcher)
             }
         }
-        return textChangeObservable.filter { it.length >= 3 }.debounce(1000, TimeUnit.MILLISECONDS)
+        return textChangeObservable.debounce(1000, TimeUnit.MILLISECONDS)
     }
 
     override fun onMealClickListener(position: Int) {
@@ -154,6 +154,6 @@ class MainFragment : Fragment(),
     }
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = RecipesFragment()
     }
 }

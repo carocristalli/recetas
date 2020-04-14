@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.uala.recetas.R
 
-class MainActivity : AppCompatActivity() {
+class RecipesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container,
-                    MainFragment.newInstance()
+                    RecipesFragment.newInstance()
                 )
                 .commitNow()
         }
