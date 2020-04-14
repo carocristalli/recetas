@@ -1,8 +1,7 @@
 <resources>
-    <string name="app_name">Recetas</string>
+    <string name="app_name">Recipes</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="empty_state">No hay resultados</string>
-    <string name="title_activity_meal_detail">Detalle</string>
+    <string name="empty_state">No recipes found</string>
+    <string name="title_activity_meal_detail">Recipe Detail</string>
+    <string name="API_KEY">\"AIzaSyASODB1cB6q-3nz3V6kdOGBtlY4n2igpOk</string>
 </resources>

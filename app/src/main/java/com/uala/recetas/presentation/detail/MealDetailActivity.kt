@@ -1,16 +1,18 @@
 package com.uala.recetas.presentation.detail
 
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.youtube.player.YouTubeBaseActivity
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
 import com.google.gson.Gson
 import com.uala.recetas.R
 import com.uala.recetas.domain.Meal
 import kotlinx.android.synthetic.main.activity_recipe_detail.*
 
-class MealDetailActivity: AppCompatActivity() {
+class MealDetailActivity : YouTubeBaseActivity(), YouTubePlayer.OnInitializedListener {
 
     private val MEAL = "meal"
     private var meal: Meal? = null
@@ -18,9 +20,15 @@ class MealDetailActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_detail)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        back_pressed.setOnClickListener {
+            onBackPressed()
+        }
         setMeal()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        youtube_view.initialize(getString(R.string.API_KEY), this)
     }
 
     private fun setMeal() {
@@ -38,12 +46,35 @@ class MealDetailActivity: AppCompatActivity() {
         strIngredient.text = meal?.ingredients()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+    override fun onInitializationSuccess(
+        provider: YouTubePlayer.Provider?,
+        youTubePlayer: YouTubePlayer?,
+        wasRestored: Boolean
+    ) {
+        youTubePlayer?.fullscreenControlFlags = YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION or
+                YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE
+
+        if (!wasRestored) {
+            val string = meal?.strYoutube?.split("=")
+            youTubePlayer?.cueVideo(string?.get(1))
         }
-        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onInitializationFailure(
+        provider: YouTubePlayer.Provider?,
+        error: YouTubeInitializationResult?
+    ) {
+        val REQUEST_CODE = 1
+
+        if (error!!.isUserRecoverableError) {
+            error.getErrorDialog(this, REQUEST_CODE).show()
+        } else {
+            val errorMessage = java.lang.String.format(
+                "There was an error initializing the YoutubePlayer (%1\$s)",
+                error.toString()
+            )
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
 }
